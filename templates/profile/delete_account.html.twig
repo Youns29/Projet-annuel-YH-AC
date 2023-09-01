@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% block title %}Supprimer mon Compte{% endblock %}
+{% block body %}
+    <style>
+        /* Changer la couleur du texte en blanc */
+        h1, p, form, fieldset {
+            color: white;
+        }
+    </style>
+    <h1>Supprimer mon Compte</h1>
+
+    <p>Vous êtes sur le point de supprimer votre compte. Cette action est irréversible.</p>
+
+    {{ form_start(deleteAccountForm) }}
+    {{ form_row(deleteAccountForm.confirmDelete) }}
+    <button type="submit" class="btn btn-danger mt-3">Confirmer la Suppression</button>
+    {{ form_end(deleteAccountForm) }}
+{% endblock %}

@@ -1,0 +1,116 @@
+{# templates/file/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Fichiers{% endblock %}
+
+{% block body %}
+	<style>
+		p, h1, h2, li, label, input, tr {
+			color: white
+		}
+         table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid white;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+            color: white;
+        }
+        #progress-bar {
+            margin-top: 10px;
+            height: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        #progress {
+            height: 100%;
+            width: 50%;
+            transition: width 0.3s ease-in-out;
+            background-color: #4caf50;
+        }
+	</style>
+    
+	{% for message in app.flashes('success') %}
+        <div 
+            style="color: green;
+                border: 2px green solid;
+                text-align: center;
+                padding: 5px;margin-bottom: 10px;">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% include "_partials/_nav.html.twig" %}
+        <h1>Télécharger un Fichier</h1>
+        <form method="post" action="{{ path('app_file') }}" enctype="multipart/form-data">
+        <label for="file">Choisir un fichier :</label>
+        <input type="file" name="file" id="file">
+        <br>
+        <button type="submit">Télécharger</button>
+    </form>
+
+    <h2 class="mt-4">Fichiers téléchargés</h2>
+    {# <div id="progress-bar">
+        <div id="progress"></div>
+    </div> #}
+    {# <p id="progress-text" style="color: white" data-total-gigabytes="{{ totalSizeGigabytes }}">{{ totalSizeGigabytes }} Go</p> #}
+    <p>Espace de stockage utilisé : {{ totalSizeGigabytes }} Go</p>
+    <p>Limite d'espace de stockage : {{ stockageSpace }} Go</p>
+    <table>
+        <tr>
+            <th>File Name</th>
+            <th>Action</th>
+            <th>Size</th>
+            <th>Format</th>
+            <th>Description</th>
+            <th>Upload Date</th>
+        </tr>
+        {% for file in uploadedFiles %}
+            <tr>
+                <td>{{ file.fileName }}</td>
+                <td>
+                <a href="{{ path('app_view_file', {'id': file.id}) }}" class="btn btn-primary" style="margin-right: 20px;">
+                <img src="{{ asset('images/oeil.png') }}" alt="Invoice Logo" style="width: 20px;">
+                </a>
+                <a href="{{ path('app_download_file', {'id': file.id}) }}" class="btn btn-success" style="margin-right: 20px;">
+                <img src="{{ asset('images/download.png') }}" alt="Télécharger" style="width: 20px;">
+                </a>
+                <a href="{{ path('app_delete_file', {'id': file.id}) }}" class="btn btn-danger">
+                <img src="{{ asset('images/delete.png') }}" alt="Supprimer" style="width: 20px;">
+                </a>
+                </td>
+                
+                <td>{{ file.size }} octets</td>
+                <td>{{ file.format }}</td>
+                <td>{{ file.description ?: 'N/A' }}</td>
+                <td>{{ file.uploadDate|date('Y-m-d') }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <script>
+    function updateProgressBar() {
+        const progressBar = document.getElementById('progress');
+        const progressText = document.getElementById('progress-text');
+        const totalSizeGigabytes = parseFloat(progressText.getAttribute('data-total-gigabytes'));
+
+
+        progressBar.style.width = `${totalSizeGigabytes * 5}%`; // Adjust the multiplier as needed
+        progressText.innerText = `${totalSizeGigabytes.toFixed(5)} Go`; // Display two decimal places
+    }
+
+    // Update progress bar when the page loads
+    updateProgressBar();
+</script>
+
+
+    </script>
+
+
+
+
+{% endblock %}
+

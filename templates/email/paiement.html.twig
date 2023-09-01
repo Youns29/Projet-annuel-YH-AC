@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Confirmation de paiement</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f3f3f3;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        h1 {
+            background-color: #264459;
+            color: #ffffff;
+            padding: 30px 0 50px;
+            font-weight: normal;
+        }
+        hr {
+            border: none;
+            border-top: 3px solid #264459;
+            margin: 20px;
+        }
+        .container {
+            background-color: #fefefe;
+            width: 580px;
+            margin: 0 auto;
+        }
+        .block {
+            margin: 0;
+            padding: 10px 20px 20px;
+        }
+        .logo {
+            width: 100%;
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="body">
+        <div class="container">
+            <div class="content">
+                <h1 class="text-center">Confirmation de paiement</h1>
+                <p class="block">
+                    Bonjour <strong>{{ user.firstName }}</strong>,
+                </p>
+                <p class="block">
+                    Merci d'avoir choisi notre service de stockage en ligne. Votre paiement de <strong>20 €</strong> pour le produit de <strong>20 Go de stockage</strong> a bien été confirmé.
+                </p>
+                <p class="block">
+                    Votre compte a été mis à jour et vous disposez désormais de <strong>20 Go de stockage</strong> supplémentaires.
+                </p>
+                <p class="block">
+                    Si vous avez des questions ou avez besoin d'assistance, n'hésitez pas à nous contacter à l'adresse suivante : <a href="mailto:cabinet@architect.com">cabinet@architect.com</a>
+                </p>
+                <p class="block">
+                    Merci de votre confiance !
+                </p>
+                <div class="footer">
+                    <p class="block">
+                        Cordialement,<br><br>
+                        Votre équipe de support
+                    </p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

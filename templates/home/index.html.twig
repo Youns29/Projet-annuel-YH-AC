@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home
+{% endblock %}
+
+{% block body %}
+	{% include "_partials/_nav.html.twig" %}
+	<style>
+		h1 {
+			color: white
+		}
+	</style>
+    {% if app.user %}
+		<div class="mb-3">
+			<h1>Vous êtes connecté en tant que
+			{{ app.user.userIdentifier }}</h1>
+		</div>
+	{% endif %}
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-3" style="margin-top: 120px;">
+                <a href="#">
+                    {# <a href="{{ path('app_facture') }}">#}
+                    <div class="card bg-white bg-opacity-50 border-0 rounded-3 shadow p-4 text-center d-flex flex-row align-items-center">
+                        <img src="{{ asset('images/invoice.png') }}" alt="Invoice Logo" style="width: 50px;">                        
+                        <h4 class="card-title" style="margin-top: 10px; margin-left: 20px;">Facture</h4>
+                    </div>
+            </div>
+            <div class="col-md-3" style="margin-left: 0px; margin-top: 80px;">
+                <a href="{{ path('app_file') }}">
+                {# <a href="{{ path('app_fichier') }}">#}
+                    <div class="card bg-white bg-opacity-50 border-0 rounded-3 shadow p-4 text-center d-flex flex-row align-items-center">
+                        <img src="{{ asset('images/file.png') }}" alt="File Logo" style="width: 50px;">
+                        <h4 class="card-title" style="margin-top: 10px; margin-left: 20px;">Fichiers</h4>
+                    </div>
+            </div>
+            <div class="col-md-3" style="margin-top: 80px;">
+                <a href="#">
+                {# <a href="{{ path('app_subscription') }}">#}
+                    <div class="card bg-white bg-opacity-50 border-0 rounded-3 shadow p-4 text-center d-flex flex-row align-items-center">
+                        <img src="{{ asset('images/shopping-cart.png') }}" alt="Shopping Logo" style="width: 50px;">
+                        <h4 class="card-title" style="margin-top: 10px; margin-left: 20px;"> Gérer Stockage</h4>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

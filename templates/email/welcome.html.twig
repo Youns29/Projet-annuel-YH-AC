@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width">
+		<title>Welcome to FilesOrganisation!</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				background-color: #f3f3f3;
+				font-family: Helvetica, Arial, sans-serif;
+			}
+			h1 {
+				background-color: #264459;
+				color: #ffffff;
+				padding: 30px 0 50px;
+				font-weight: normal;
+			}
+			hr {
+				border: none;
+				border-top: 3px solid #264459;
+				margin: 20px;
+			}
+			.container {
+				background-color: #fefefe;
+				width: 580px;
+				margin: 0 auto;
+			}
+			.block {
+				margin: 0;
+				padding: 10px 20px 20px;
+			}
+            .li {
+				margin: 0;
+				padding: 10px 20px 20px;
+			}
+			.logo {
+				width: 100%;
+			}
+			.text-center {
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="body">
+			<div class="container">
+				{# <div class="header text-center">
+					<a href="{{ url('app_home') }}">
+						<img src="{{ absolute_url(asset('images/logo1.png')) }}" class="logo" alt="Logo">
+					</a>
+				</div> #}
+				<div class="content">
+					<h1 class="text-center">Content de vous voir parmi nous {{user.firstName}}!</h1>
+					<p class="block">
+						Bienvenue sur
+						<strong>FilesOrganisation</strong>, l'application de gestion de fichiers de ArchitectFirm
+					</p>
+					<p class="block">
+						Nous sommes ravis de vous accueillir dans notre communauté. Dès maintenant, vous avez accès à un espace de stockage personnel pour gérer vos fichiers en toute simplicité. Voici ce que vous pouvez faire avec notre application :
+					</p>
+                    <p class="block">
+                        - <strong>Visualisation des fichiers téléchargés:</strong> Explorez vos fichiers téléchargés à tout moment. Vous pouvez trier et organiser vos documents pour un accès rapide et efficace.
+                    </p>
+                    <p class="block">
+                        - <strong>Télécharger de Nouveaux Fichiers:</strong> Ajoutez de nouveaux fichiers à votre espace de stockage en quelques clics. Gardez tous vos documents importants au même endroit.
+                    </p>
+                    <p class="block">
+                        - <strong>Suppression des Fichiers:</strong> Si vous n'avez plus besoin de certains fichiers, vous pouvez les supprimer en toute sécurité. Notre application garantit la protection de vos données.
+                    </p>
+                    <p class="block">
+                        - <strong>Accès à vos Factures:</strong> Consultez vos factures pour vos achats de stockage. Nous tenons à vous offrir une transparence totale sur vos transactions.
+                    </p>
+                    <p class="block">
+                        - <strong>Achat de Stockage Supplémentaire:</strong> Si votre espace de stockage atteint sa limite, ne vous inquiétez pas ! Vous avez la possibilité d'acheter plus d'espace de stockage pour continuer à gérer vos fichiers sans interruption.
+                    </p>
+                    <p class="block">
+                        N'hésitez pas à explorer les fonctionnalités de notre application et à contacter notre équipe d'assistance en cas de questions ou de préoccupations. Nous sommes là pour vous aider à tirer le meilleur parti de FileOrganisation.
+					</p>
+                    <p class="block">
+                        Profitez de votre expérience avec nous et nous vous remercions d'avoir choisi FileOrganisation pour vos besoins de gestion de fichiers.
+					</p>
+					<div class="footer">
+						<p class="block">
+							Cordialement,<br><br>
+                            L'équipe de ArchitectFirm - FileOrganisation
+						</p>
+					</div>
+				</div>
+			</div>
+		</body>
+	</body>
+</html>

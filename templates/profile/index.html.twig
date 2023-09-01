@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% block title %}Profil
+{% endblock %}
+{% block body %}
+    <style>
+		/* Changer la couleur du texte en blanc */
+		h1,
+		p,
+		form, fieldset {
+			color: white;
+		}
+    </style>
+    {% for message in app.flashes('success') %}
+        <div 
+            style="color: green;
+                border: 2px green solid;
+                text-align: center;
+                padding: 5px;margin-bottom: 10px;">
+            {{ message }}
+        </div>
+    {% endfor %}
+	{% include "_partials/_nav.html.twig" %}
+    <h1>Mon Profil</h1>
+
+    {{ form_start(profileForm) }}
+    <fieldset class="mb-3">
+    <legend>Mon Identité</legend>
+    {{ form_row(profileForm.firstName) }}
+    {{ form_row(profileForm.lastName) }}
+    {{ form_row(profileForm.email) }}
+    {{ form_row(profileForm.phone_number) }}
+    {{ form_row(profileForm.address) }}
+    </fieldset>
+    <button type="submit" class="btn btn-primary mt-3">Mettre à jour</button>
+    <a href="{{ path('app_delete_account') }}" class="btn btn-danger mt-3">Supprimer mon compte</a>
+    {{ form_end(profileForm) }}
+
+    {# {% if app.flashes('success') %}
+        <div class="alert alert-success mt-3">
+            {{ app.flashes('success')[0] }}
+        </div>
+    {% endif %} #}
+{% endblock %}

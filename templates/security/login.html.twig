@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion
+{% endblock %}
+
+{% block body %}
+	<style>
+		/* Changer la couleur du texte en blanc */
+		h1,
+		p,
+		form {
+			color: white;
+		}
+	</style>
+	<a class="navbar-brand" href="{{ path('Home') }}">
+            <img src="{{ asset('images/logo1.png') }}" alt="Mon Logo">
+    </a>
+	<section class="container my-3">
+		<div class="row">
+			<div class="col">
+				<form method="post">
+					{% if error %}
+						<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+					{% endif %}
+					{% for message in app.flashes('success') %}
+                        <div 
+                            style="color: green;
+                                border: 2px green solid;
+                                text-align: center;
+                                padding: 5px;margin-bottom: 10px;">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+				    <h1>Connexion</h1>
+				    <p>Bienvenue sur FilesOrganisation</p>
+					<label for="inputEmail" class="mt-3">Email</label>
+					<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control mt-3" autocomplete="email" required autofocus>
+					<label for="inputPassword" class="mt-3">Mot de passe</label>
+					<input type="password" name="password" id="inputPassword" class="form-control mt-3" autocomplete="current-password" required>
+
+					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+					<p>
+						<a class="link-opacity-25-hover mt-4" href="{{ path('Registration') }}">Pas encore inscrit ?</a>
+					</p>
+					<button class="btn btn-lg btn-primary mt-3" type="submit">
+						Me connecter
+					</button>
+				</form>
+			</div>
+		</div>
+	</section>
+
+{% endblock %}

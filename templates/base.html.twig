@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+			- FilesOrganisation
+		</title>
+		<link rel="icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
+		<meta
+		name="viewport" content="width=device-width, initial-scale=1.0">
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+		{# feuilles de styles #}
+		<link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}"> 
+        {% block stylesheets %}{% endblock %}
+		<link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
+		{% if is_granted('ROLE_ADMIN') %}
+        <link rel="stylesheet" href="{{ asset('assets/css/admin-styles.css') }}">
+    	{% endif %}
+
+		{# Fichiers JS #}
+		 <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"defer></script>
+         {% block javascripts %}{% endblock %}
+		 <script src="{{asset('assets/js/scripts.js')}}"defer></script>
+	</head>
+	<body>
+        <div class="logo-container">
+        </div>
+        {% block body %}{% endblock %}
+	</body>
+	</html>

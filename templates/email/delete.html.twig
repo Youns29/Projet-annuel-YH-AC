@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background-color: #007bff;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .footer {
+            background-color: #f4f4f4;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .block {
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Confirmation de suppression de compte</h1>
+        </div>
+        <div class="content">
+            <p class="block">Bonjour,</p>
+            <p class="block">Votre compte a été supprimé avec succès.</p>
+            <p class="block">Si vous avez des questions ou avez besoin d'assistance, n'hésitez pas à nous contacter.</p>
+            <p class="block">Merci de nous avoir rejoint. Nous espérons vous revoir bientôt !</p>
+            <p>Cordialement,</p>
+            <p>Votre équipe de support FirmArchitect</p>
+        </div>
+        <div class="footer">
+            &copy; {{ "now"|date("Y") }} FirmArchitect. Tous droits réservés.
+        </div>
+    </div>
+</body>
+</html>

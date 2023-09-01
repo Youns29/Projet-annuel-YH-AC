@@ -1,0 +1,59 @@
+{# templates/admin/list_files.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Fichiers{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        h1, h2, tr {
+            color: white;
+        }
+        h2 {
+            font-size: 14px; /* Taille de la police de caractères pour les e-mails */
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 50px; /* Ajout d'une marge basse pour créer de l'espace entre les tableaux */
+        }
+        th, td {
+            border: 1px solid white;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #333;
+            color: white;
+        }
+        td {
+            margin: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>Liste des Fichiers</h1>
+
+    {% for user in users %}
+        <h2 class="ms-3">{{ user.email }}</h2>
+        <table>
+            <tr>
+                <th>Nom du Fichier</th>
+                <th>Taille</th>
+                <th>Format</th>
+                <th>Date de Création</th>
+                <!-- Ajoutez d'autres en-têtes de colonne si nécessaire -->
+            </tr>
+            {% for file in user.files %}
+                <tr>
+                    <td>{{ file.fileName }}</td>
+                    <td>{{ file.size }} octets</td>
+                    <td>{{ file.format }}</td>
+                    <td>{{ file.uploadDate|date('Y-m-d H:i:s') }}</td>
+                    <!-- Ajoutez d'autres colonnes de données si nécessaire -->
+                </tr>
+            {% endfor %}
+        </table>
+    {% endfor %}
+{% endblock %}
