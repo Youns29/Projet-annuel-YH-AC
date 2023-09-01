@@ -16,33 +16,33 @@ class ProfileFormType extends AbstractType
         $builder
             ->add('firstName', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control'
+                    'class' => 'form-control mb-3'
                 ],
                 'label' => 'Prénom :'
             ])
             ->add('lastName', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control'
+                    'class' => 'form-control mb-3'
                 ],
-                'label' => 'Nom'
+                'label' => 'Nom :'
             ])
             ->add('email', EmailType::class, [
                 'attr' => [
-                    'class' => 'form-control'
+                    'class' => 'form-control mb-3'
                 ],
-                'label' => 'Email'
+                'label' => 'Email :'
             ])
             ->add('phone_number', TextType::class, [
                 'attr' => [
-                    'class' => 'form-control'
+                    'class' => 'form-control mb-3'
                 ],
-                'label' => 'N° de téléphone'
+                'label' => 'N° de téléphone :'
             ])
             ->add('address', TextType::class, [
                 'attr' => [
                     'class' => 'form-control'
                 ],
-                'label' => 'Adresse'
+                'label' => 'Adresse :'
             ])
             ;
     }

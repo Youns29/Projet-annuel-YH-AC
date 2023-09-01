@@ -4,7 +4,10 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Entity\User;
+use App\Form\ProfileFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,6 +44,30 @@ class AdminController extends AbstractController
 
         return $this->render('admin/list_files.html.twig', [
             'users' => $users,
+        ]);
+    }
+
+    #[Route('/admin/profile', name: 'admin_profile')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function adminProfile(Request $request, FormFactoryInterface $formFactory, EntityManagerInterface $entityManager): Response
+    {
+        // Récupérer l'utilisateur administrateur connecté
+        $admin = $this->getUser();
+
+        // Créer un formulaire pour mettre à jour le profil de l'administrateur
+        $form = $formFactory->create(ProfileFormType::class, $admin);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($admin);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre profil a été mis à jour avec succès.');
+        }
+
+        return $this->render('admin/profile.html.twig', [
+            'profileForm' => $form->createView(),
         ]);
     }
 }
