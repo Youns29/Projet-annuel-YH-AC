@@ -1,0 +1,23 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+Home:
+    path: /home
+    controller: App\Controller\HomeController::index
+
+Registration:
+    path: /inscription
+    controller: App\Controller\Registration::register
+
+uploaded_files_ajax:
+    path: '/uploaded-files-ajax'
+    controller: 'App\Controller\FileController::getUploadedFilesAjax'
+    methods: ['GET']
+
+app_admin:
+    path: /admin
+    controller: App\Controller\AdminController::adminPage
+    methods: GET
