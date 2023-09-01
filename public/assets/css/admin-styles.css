@@ -4,3 +4,25 @@ body {
      background-size: 120px; /*Largeur totale de 12 colonnes */
      background-position: 0 0; /*Position initiale */
 } 
+
+.user-info {
+    justify-content: center;
+    transition: 0.5s;
+    border-radius: 50px;
+    background: linear-gradient(145deg, #dfdfdf, #ffffffd6);
+    box-shadow:  20px 20px 60px #d3d3d3,
+    -20px -20px 60px #ffffffbb;
+    text-align: center;
+    width: 250px;
+    height: 230px;
+    display: inline-grid;
+    padding: 20px;
+    overflow: hidden;
+    margin: 24px;
+}
+
+.user-info:hover {
+    transition: 0.5s;
+    width: 350px;
+    height: 350px;
+}
