@@ -24,20 +24,20 @@
 {% endif %}
 {% if users %}
     <div class="mt-3 clearfix">
-        {% set columnSize = totalUsers > 11 ? 11 ? 11 : totalUsers %}
+        {% set columnSize = totalUsers > 6 ? 6 ? 6 : totalUsers %}
         {% set columnCount = (totalUsers / columnSize)|round(0, 'ceil') %}
         {% for columnIndex in 1..columnCount %}
             <div class="user-column">
                 {% set usersInColumn = users|slice((columnIndex - 1) * columnSize, columnSize) %}
                 {% for user in usersInColumn %}
                     <div class="user-info">
-                        <strong>Email:</strong> {{ user.email }}<br>
-                        <strong>Nom:</strong> {{ user.lastName }}<br>
-                        <strong>Prénom:</strong> {{ user.firstName }}<br>
-                        <strong>Numéro de portable:</strong> {{ user.phoneNumber }}<br>
-                        <strong>Adresse:</strong> {{ user.address }}<br>
-                        <strong>Espace de stockage (en Go):</strong> {{ user.stockageSpace }} Go
-                        <strong>Stockage utilisé (en Go):</strong> {{ user.useSpace }} Go
+                        <strong class="title">Email: {{ user.email }}</strong><br>
+                        <strong class="title">Nom: {{ user.lastName }}</strong><br>
+                        <strong class="title">Prénom: {{ user.firstName }}</strong><br>
+                        <strong class="title">Numéro de portable: {{ user.phoneNumber }}</strong><br>
+                        <strong class="title">Adresse: {{ user.address }}</strong><br>
+                        <strong class="name">Espace de stockage (en Go): {{ user.stockageSpace }} Go </strong><br>
+                        <strong class="name">Stockage utilisé (en Go):{{ user.useSpace }} Go </strong> 
                     </div>
                 {% endfor %}
             </div>
