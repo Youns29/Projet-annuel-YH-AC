@@ -22,7 +22,7 @@
 
     <p class="ms-3" style="font-size: 25px;">Espace de stockage total : {{ stockageSpace }} Go</p>
 
-    <p class="ms-3" style="font-size: 25px;">Espace utilisé : {{ useSpace }} Go</p>
+    <p class="ms-3" style="font-size: 25px;">Espace utilisé : {{ useSpace|number_format(7, '.', '') }} Go</p>
 
     <div class="d-flex justify-content-center align-items-center">
         <div>

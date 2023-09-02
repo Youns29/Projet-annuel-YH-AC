@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -43,19 +44,20 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Confirmation de suppression de compte</h1>
+            <h1>Suppression de compte utilisateur</h1>
         </div>
         <div class="content">
-            <p class="block">Bonjour {{ firstname }} {{ lastname }}, </p>
-            <p class="block">Votre compte a été supprimé avec succès.</p>
-            <p class="block">Si vous avez des questions ou avez besoin d'assistance, n'hésitez pas à nous contacter.</p>
-            <p class="block">Merci de nous avoir rejoint. Nous espérons vous revoir bientôt !</p>
-            <p>Cordialement,</p>
-            <p>Votre équipe de support FirmArchitect</p>
+            <p class="block">Bonjour Administrateur,</p>
+
+            <p class="block">L'utilisateur {{ firstname }} {{ lastname }} a supprimé son compte.</p>
+
+            <p class="block">Nombre de fichiers supprimés : {{ numFilesDeleted }} fichier(s)</p>
+
+            <p>Merci,</p>
+            <p>Votre application</p>
         </div>
         <div class="footer">
             &copy; {{ "now"|date("Y") }} FirmArchitect. Tous droits réservés.
         </div>
-    </div>
 </body>
 </html>

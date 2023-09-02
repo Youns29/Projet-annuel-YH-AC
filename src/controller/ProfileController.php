@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\ProfileFormType;
 use App\Form\DeleteAccountFormType;
+use App\Repository\UserRepository;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mime\Email;
@@ -53,9 +54,10 @@ class ProfileController extends AbstractController
 
 
     #[Route('/profile/delete', name: 'app_delete_account')]
-    public function deleteAccount(Request $request, EntityManagerInterface $entityManager): Response
+    public function deleteAccount(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
         $user = $this->getUser();
+        $Alladmins = $userRepository->findAllAdmins();
 
         // Créez le formulaire de confirmation
         $form = $this->createForm(DeleteAccountFormType::class);
@@ -66,12 +68,26 @@ class ProfileController extends AbstractController
             $confirmDelete = $form->get('confirmDelete')->getData();
 
             if ($confirmDelete) {
+
+            // Récupérez les fichiers de l'utilisateur avant de supprimer le compte
+            $userFiles = $user->getFiles();
+
+            // Comptez les fichiers récupérés
+            $numFilesDeleted = count($userFiles);
+
                 // Supprimez le compte et les données de l'utilisateur
                 $entityManager->remove($user);
                 $entityManager->flush();
 
                 // Envoyez un e-mail de confirmation
                 $this->sendDeleteConfirmationEmail($user->getEmail());
+
+                //Notifier l'administrateur par email
+                foreach($Alladmins as $admin){
+
+                    $this->sendDeleteNotificationAdmin($admin->getEmail(), $numFilesDeleted);
+
+                }
 
                 // Déconnectez automatiquement l'utilisateur après la 
                 $this->tokenStorage->setToken(null);
@@ -97,9 +113,30 @@ class ProfileController extends AbstractController
             ->from('cabinet@architect.com')
             ->to($userEmail)
             ->subject('Confirmation de suppression de compte')
-            ->htmlTemplate('email/delete.html.twig');
+            ->htmlTemplate('email/delete.html.twig')
+            ->context([
+                "firstname" => $this->getUser()->getFirstName(),
+                "lastname" => $this->getUser()->getLastName()
+            ]);
 
         $this->mailer->send($email3);
+    }
+
+    private function sendDeleteNotificationAdmin($AdminEmail, $numFilesDeleted)
+    {
+
+        $email4 = (new TemplatedEmail())
+            ->from('cabinet@architect.com')
+            ->to($AdminEmail)
+            ->subject('Suppression de compte utilisateur')
+            ->htmlTemplate('email/notification.delete.html.twig')
+            ->context([
+                "firstname" => $this->getUser()->getFirstName(),
+                "lastname" => $this->getUser()->getLastName(), 
+                "numFilesDeleted" => $numFilesDeleted,
+            ]);
+
+        $this->mailer->send($email4);
     }
 }
 

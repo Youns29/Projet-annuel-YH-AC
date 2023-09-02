@@ -35,6 +35,7 @@ class FileController extends AbstractController
                 // Obtenir la taille du fichier en utilisant la fonction filesize()
                 $tempFilePath = $uploadDirectory . '/' . $newFilename;
                 $size = filesize($tempFilePath);
+                
 
                 // Récupérer l'utilisateur actuellement authentifié
                 $user = $security->getUser();
@@ -48,20 +49,25 @@ class FileController extends AbstractController
                     $useSpace += $file->getSize();
                 }
 
+                $useSpace = ($useSpace + $size) / (1024 * 1024 * 1024); // Convertir en gigaoctets
+
                 // Limite d'espace autorisée pour l'utilisateur
                 $stockageSpace = $user->getStockageSpace(); // Vous devez avoir cette valeur définie dans votre entité User
+                // dd($useSpace.">".$stockageSpace);
 
+                
                 // Vérifiez si l'espace utilisé après l'ajout du nouveau fichier dépasse la limite
-                if (($useSpace + $size) > $stockageSpace) {
+                if ($useSpace > $stockageSpace) {
                     // Redirigez l'utilisateur vers la page d'achat de stockage supplémentaire
                     $this->addFlash('error', 'L\'espace de stockage est insuffisant. Veuillez acheter du stockage supplémentaire.');
                     return $this->redirectToRoute('app_stockage');
                 }
+                // dd($size);
 
                 // Créez une nouvelle instance de l'entité Files
                 $file = new Files();
                 $file->setFileName($newFilename);
-                $file->setSize($size); // Définissez la taille du fichier
+                $file->setSize($size);// Définissez la taille du fichier
                 $file->setUser($user);
                 $file->setFormat($format); // Définir le format du fichier
                 // Définissez d'autres attributs si nécessaire...
@@ -87,11 +93,12 @@ class FileController extends AbstractController
             $useSpace += $file->getSize();
         }
 
-        $totalSizeGigabytes = $useSpace / (1024 * 1024 * 1024); // Convertir en gigaoctets
+         // Convertir en gigaoctets
+
 
 
         $user = $security->getUser();
-        $user->setUseSpace($totalSizeGigabytes); // Mettez à jour la valeur useSpace pour l'utilisateur
+        $user->setUseSpace($useSpace); // Mettez à jour la valeur useSpace pour l'utilisateur
         $entityManager->persist($user); // Persistez les modifications de l'utilisateur
         $entityManager->flush();
 
@@ -99,8 +106,7 @@ class FileController extends AbstractController
         // Passez l'espace utilisé et la limite d'espace au modèle
         return $this->render('file/index.html.twig', [
             'uploadedFiles' => $uploadedFiles,
-            'totalSizeGigabytes' => $totalSizeGigabytes,
-            // 'useSpace' => $useSpace,
+            'useSpace' => $useSpace,
             'stockageSpace' => $user->getStockageSpace(), // Limite d'espace depuis l'entité User
         ]);
     }
