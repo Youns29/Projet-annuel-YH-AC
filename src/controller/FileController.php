@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace App\Controller;
 
 use App\Entity\Files;
@@ -22,7 +23,7 @@ class FileController extends AbstractController
 
             if ($uploadedFile) {
                 $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $newFilename = $originalFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension();
+                $newFilename = $originalFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
 
                 // Obtenir le format du fichier en utilisant pathinfo
                 $fileInfo = pathinfo($newFilename);
@@ -32,7 +33,7 @@ class FileController extends AbstractController
                 $uploadedFile->move($uploadDirectory, $newFilename);
 
                 // Obtenir la taille du fichier en utilisant la fonction filesize()
-                $tempFilePath = $uploadDirectory.'/'.$newFilename;
+                $tempFilePath = $uploadDirectory . '/' . $newFilename;
                 $size = filesize($tempFilePath);
 
                 // Récupérer l'utilisateur actuellement authentifié
@@ -40,6 +41,22 @@ class FileController extends AbstractController
 
                 // Obtenir le format du fichier
                 $format = $uploadedFile->getClientOriginalExtension();
+
+                // Calculez l'espace actuellement utilisé par l'utilisateur
+                $useSpace = 0;
+                foreach ($user->getFiles() as $file) {
+                    $useSpace += $file->getSize();
+                }
+
+                // Limite d'espace autorisée pour l'utilisateur
+                $stockageSpace = $user->getStockageSpace(); // Vous devez avoir cette valeur définie dans votre entité User
+
+                // Vérifiez si l'espace utilisé après l'ajout du nouveau fichier dépasse la limite
+                if (($useSpace + $size) > $stockageSpace) {
+                    // Redirigez l'utilisateur vers la page d'achat de stockage supplémentaire
+                    $this->addFlash('error', 'L\'espace de stockage est insuffisant. Veuillez acheter du stockage supplémentaire.');
+                    return $this->redirectToRoute('app_stockage');
+                }
 
                 // Créez une nouvelle instance de l'entité Files
                 $file = new Files();
@@ -77,8 +94,8 @@ class FileController extends AbstractController
         $user->setUseSpace($totalSizeGigabytes); // Mettez à jour la valeur useSpace pour l'utilisateur
         $entityManager->persist($user); // Persistez les modifications de l'utilisateur
         $entityManager->flush();
-        
-        
+
+
         // Passez l'espace utilisé et la limite d'espace au modèle
         return $this->render('file/index.html.twig', [
             'uploadedFiles' => $uploadedFiles,
@@ -98,7 +115,7 @@ class FileController extends AbstractController
             throw $this->createNotFoundException('Fichier introuvable');
         }
 
-        $filePath = $this->getParameter('upload_directory').'/'.$file->getFileName();
+        $filePath = $this->getParameter('upload_directory') . '/' . $file->getFileName();
 
         return new BinaryFileResponse($filePath);
     }
@@ -114,7 +131,7 @@ class FileController extends AbstractController
             throw $this->createNotFoundException('Fichier introuvable');
         }
 
-        $filePath = $this->getParameter('upload_directory').'/'.$file->getFileName();
+        $filePath = $this->getParameter('upload_directory') . '/' . $file->getFileName();
 
         return $this->file($filePath);
     }
@@ -131,7 +148,7 @@ class FileController extends AbstractController
         }
 
         // Supprimez le fichier du répertoire de téléchargement
-        $filePath = $this->getParameter('upload_directory').'/'.$file->getFileName();
+        $filePath = $this->getParameter('upload_directory') . '/' . $file->getFileName();
         if (file_exists($filePath)) {
             unlink($filePath);
         }

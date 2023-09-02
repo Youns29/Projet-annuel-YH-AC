@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer le Stockage{% endblock %}
+
+{% block body %}
+{% include "_partials/_nav.html.twig" %}
+<style>
+    h1, p { color: white }
+</style>
+{% for message in app.flashes('error') %}
+    <div 
+        style="color: red;
+            border: 2px red solid;
+            text-align: center;
+            padding: 5px;margin-bottom: 10px;">
+        {{ message }}
+        </div>
+    {% endfor %}
+    <h1 class="ms-3 mt-3">Gérer le Stockage</h1>
+
+    <p class="ms-3 mt-5" style="font-size: 25px;">Bienvenue, {{ user.firstName }} {{ user.lastName }} !</p>
+
+    <p class="ms-3" style="font-size: 25px;">Espace de stockage total : {{ stockageSpace }} Go</p>
+
+    <p class="ms-3" style="font-size: 25px;">Espace utilisé : {{ useSpace }} Go</p>
+
+    <div class="d-flex justify-content-center align-items-center">
+        <div>
+            <p class="progress-label mt-5" style="font-size: 20px; text-align: center;"><strong>Utilisation de l'espace de stockage :</strong></p>
+            <div class="progress" style="height: 50px; width: 600px;">
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{ percentageUsed }}%;" aria-valuenow="{{ percentageUsed }}" aria-valuemin="0" aria-valuemax="100">{{ percentageUsed }} %</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

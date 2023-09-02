@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil de l'Administrateur{% endblock %}
+
+{% block body %}
+    <style>
+        h1, legend, fieldset{ color: white }
+    </style>
+    {% for message in app.flashes('success') %}
+        <div 
+            style="color: green;
+                border: 2px green solid;
+                text-align: center;
+                padding: 5px;margin-bottom: 10px;">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% include "_partials/_nav.admin.html.twig" %}
+    <h1>Profil de l'Administrateur</h1>
+    <fieldset class="mb-3">
+    <legend>Mon Identité</legend>
+    {{ form_start(profileForm) }}
+    {{ form_row(profileForm.firstName) }}
+    {{ form_row(profileForm.lastName) }}
+    {{ form_row(profileForm.email) }}
+    {{ form_row(profileForm.phone_number) }}
+    {{ form_row(profileForm.address) }}
+    </fieldset>
+    <button type="submit" class="btn btn-primary mt-3">Mettre à jour</button>
+    {{ form_end(profileForm) }}
+{% endblock %}
