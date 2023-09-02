@@ -93,7 +93,7 @@ class FileController extends AbstractController
             $useSpace += $file->getSize();
         }
 
-         // Convertir en gigaoctets
+        $useSpace = $useSpace / (1024 * 1024 * 1024); // Convertir en gigaoctets
 
 
 
