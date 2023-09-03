@@ -24,7 +24,7 @@ class PdfService
         $this->domPdf->loadHtml($html);
         $this->domPdf->render();
         $this->domPdf->stream("invoice.pdf", [
-            'Attachement' => true
+            'Attachement' => false
         ]);
     }
 

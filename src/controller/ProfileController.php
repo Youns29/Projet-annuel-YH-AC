@@ -14,9 +14,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\PdfService;
 
 class ProfileController extends AbstractController
 {
+
     #[Route('/profil', name: 'app_profile')]
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -41,6 +43,8 @@ class ProfileController extends AbstractController
             'profileForm' => $form->createView(),
         ]);
     }
+
+        
 
     private $tokenStorage;
     private $mailer;
