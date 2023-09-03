@@ -5,7 +5,24 @@
 {% block body %}
 {% include "_partials/_nav.html.twig" %}
 <style>
-    h1, p { color: white }
+    h1, p, label, span { color: white }
+    .custom-checkbox {
+    border: 2px solid rgba(255, 255, 255, 0.5); 
+    border-radius: 5px; 
+    padding: 10px; 
+    color: white; 
+    background-color: rgba(255, 255, 255, 0.5); 
+    max-width: 900px; 
+}
+
+/* Style pour la checkbox */
+.custom-checkbox .form-check-input {
+    margin-right: 10px; 
+}
+
+.custom-checkbox .quantity {
+    margin-right: 150px;
+}
 </style>
 {% for message in app.flashes('error') %}
     <div 
@@ -28,8 +45,29 @@
         <div>
             <p class="progress-label mt-5" style="font-size: 20px; text-align: center;"><strong>Utilisation de l'espace de stockage :</strong></p>
             <div class="progress" style="height: 50px; width: 600px;">
-                <div class="progress-bar bg-success" role="progressbar" style="width: {{ percentageUsed }}%;" aria-valuenow="{{ percentageUsed }}" aria-valuemin="0" aria-valuemax="100">{{ percentageUsed }} %</div>
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{ percentageUsed }}%;" aria-valuenow="{{ percentageUsed }}" aria-valuemin="0" aria-valuemax="{{ stockageSpace }}">{{ percentageUsed }} %</div>
             </div>
         </div>
     </div>
+
+
+    <form style="margin-top: 120px;" method="post" action="{{ path('app_stripe_connected') }}">
+    <h1 class="ms-3 mt-3">Acheter du Stockage supplémentaire</h1>
+        <div class="storage-option mt-3 ms-3">
+            <div class="custom-checkbox d-flex justify-content-between align-items-center p-3">
+                <input type="checkbox" id="purchase_option_1" name="purchase_option_1" value="20" class="form-check-input me-3">
+                <div class="text-center flex-grow-1">
+                    <label for="purchase_option_1" class="form-check-label fs-4"><strong>Taille</strong> : 20Go</label>
+                </div>
+                <div class="quantity">
+                    <label for="purchase_option_1" class="form-check-label fs-4"><strong>Quantité</strong> : 1</label>
+                </div>
+                <div class="text-end">
+                    <span class="fs-4"><strong>Prix</strong> : 20€</span>
+                </div>
+            </div>
+        </div>
+        <!-- Add more storage options as needed -->
+        <button type="submit" class="btn btn-primary mt-3 ms-3">Acheter</button>
+    </form>
 {% endblock %}
