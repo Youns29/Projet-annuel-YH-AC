@@ -52,7 +52,21 @@
         <br>
         <button type="submit">Télécharger</button>
     </form>
+<form method="get" action="{{ path('app_file') }}">
+        <label for="sort_by">Trier par :</label>
+        <select name="sort_by" id="sort_by">
+            <option value="date">Date d'upload</option>
+            <option value="size">Poids</option>
+        </select>
 
+        <label for="search_term">Rechercher par nom :</label>
+        <input type="text" name="search_term" id="search_term">
+
+        <label for="file_format">Filtrer par format :</label>
+        <input type="text" name="file_format" id="file_format">
+
+        <button type="submit">Appliquer</button>
+    </form>
     <h2 class="mt-4">Fichiers téléchargés</h2>
     {# <div id="progress-bar">
         <div id="progress"></div>

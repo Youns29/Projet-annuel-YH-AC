@@ -36,6 +36,40 @@ class FileController extends AbstractController
                 $tempFilePath = $uploadDirectory . '/' . $newFilename;
                 $size = filesize($tempFilePath);
                 
+                // Récupérer les paramètres de tri et de filtre depuis la requête
+                $sortBy = $request->query->get('sort_by', 'date'); // Par défaut, trier par date
+                $searchTerm = $request->query->get('search_term', ''); // Terme de recherche
+                $fileFormat = $request->query->get('file_format', ''); // Format de fichier
+
+                // Récupérer l'utilisateur actuel
+                $user = $security->getUser();
+
+                // Créer une requête pour récupérer les fichiers
+                $fileRepo = $entityManager->getRepository(Files::class);
+                $queryBuilder = $fileRepo->createQueryBuilder('f')
+                                            ->where('f.user = :user')
+                                            ->setParameter('user', $user);
+
+                // Appliquer le tri
+                if ($sortBy === 'date') {
+                    $queryBuilder->orderBy('f.uploadDate', 'DESC'); // Trier par date de téléchargement
+                } elseif ($sortBy === 'size') {
+                    $queryBuilder->orderBy('f.size', 'DESC');
+                }
+
+                // Appliquer la recherche par nom de fichier
+                if (!empty($searchTerm)) {
+                    $queryBuilder->andWhere('f.fileName LIKE :term')
+                                    ->setParameter('term', '%' . $searchTerm . '%');
+                }
+
+                // Appliquer le filtre de format
+                if (!empty($fileFormat)) {
+                    $queryBuilder->andWhere('f.format = :format')
+                                    ->setParameter('format', $fileFormat);
+                }
+
+                $uploadedFiles = $queryBuilder->getQuery()->getResult();
 
                 // Récupérer l'utilisateur actuellement authentifié
                 $user = $security->getUser();
