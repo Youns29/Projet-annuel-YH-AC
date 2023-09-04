@@ -53,7 +53,9 @@ class FileController extends AbstractController
                 // Appliquer le tri
                 if ($sortBy === 'date') {
                     $queryBuilder->orderBy('f.uploadDate', 'DESC'); // Trier par date de téléchargement
-                } elseif ($sortBy === 'size') {
+                } elseif ($sortBy === 'size') 
+                dump($sortBy);
+                {
                     $queryBuilder->orderBy('f.size', 'DESC');
                 }
 
