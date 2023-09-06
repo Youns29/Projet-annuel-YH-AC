@@ -80,7 +80,7 @@
         {% for file in uploadedFiles %}
             <tr>
                 <td>{{ file.fileName }}</td>
-                <td>
+                <td class="text-center">
                 <a href="{{ path('app_view_file', {'id': file.id}) }}" class="btn btn-primary" style="margin-right: 20px;">
                 <img src="{{ asset('images/oeil.png') }}" alt="Invoice Logo" style="width: 20px;">
                 </a>

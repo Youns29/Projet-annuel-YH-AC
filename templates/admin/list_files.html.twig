@@ -10,12 +10,12 @@
             color: white;
         }
         h2 {
-            font-size: 14px; /* Taille de la police de caractères pour les e-mails */
+            font-size: 14px;
         }
         table {
             border-collapse: collapse;
             width: 100%;
-            margin-bottom: 50px; /* Ajout d'une marge basse pour créer de l'espace entre les tableaux */
+            margin-bottom: 50px;
         }
         th, td {
             border: 1px solid white;
@@ -23,8 +23,9 @@
             text-align: left;
         }
         th {
-            background-color: #333;
-            color: white;
+            background-color: rgba(255, 255, 255, 0.5); 
+            border: 2px solid white; 
+            text-align: center;
         }
         td {
             margin: 5px;
@@ -37,21 +38,29 @@
     <h1>Liste des Fichiers</h1>
 
     {% for user in users %}
-        <h2 class="ms-3">{{ user.email }}</h2>
+        <h2 class="ms-3"> Utilisateur : {{ user.email }}</h2>
         <table>
             <tr>
                 <th>Nom du Fichier</th>
+                <th>Action</th>
                 <th>Taille</th>
                 <th>Format</th>
-                <th>Date de Création</th>
+                <th>Date de téléchargement</th>
                 <!-- Ajoutez d'autres en-têtes de colonne si nécessaire -->
             </tr>
             {% for file in user.files %}
                 <tr>
                     <td>{{ file.fileName }}</td>
-                    <td>{{ file.size }} octets</td>
-                    <td>{{ file.format }}</td>
-                    <td>{{ file.uploadDate|date('Y-m-d H:i:s') }}</td>
+                    <td class="text-center"><a href="{{ path('app_view_listfile', {'id': file.id}) }}" class="btn btn-primary" style="margin-right: 20px;">
+                    <img src="{{ asset('images/oeil.png') }}" alt="Invoice Logo" style="width: 20px;">
+                    </a>
+                    <a href="{{ path('app_delete_listfile', {'id': file.id}) }}" class="btn btn-danger">
+                    <img src="{{ asset('images/delete.png') }}" alt="Supprimer" style="width: 20px;">
+                    </a>
+                    </td>
+                    <td style="text-align: center;">{{ file.size }} octets</td>
+                    <td style="text-align: center;">{{ file.format }}</td>
+                    <td style="text-align: center;">{{ file.uploadDate|date('Y-m-d H:i:s') }}</td>
                     <!-- Ajoutez d'autres colonnes de données si nécessaire -->
                 </tr>
             {% endfor %}

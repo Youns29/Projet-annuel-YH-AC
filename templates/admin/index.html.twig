@@ -37,7 +37,7 @@
                         <strong class="title">Numéro de portable: {{ user.phoneNumber }}</strong><br>
                         <strong class="title">Adresse: {{ user.address }}</strong><br>
                         <strong class="name">Espace de stockage (en Go): {{ user.stockageSpace }} Go </strong><br>
-                        <strong class="name">Stockage utilisé (en Go):{{ user.useSpace }} Go </strong> 
+                        <strong class="name">Stockage utilisé (en Go):{{ user.useSpace|number_format(4, '.', '') }} Go </strong> 
                     </div>
                 {% endfor %}
             </div>
