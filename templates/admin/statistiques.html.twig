@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques{% endblock %}
+
+{% block body %}
+<style>
+    h1, h2, fieldset { color: white }
+    table {
+        width: 80%;
+        margin: 20px auto;
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 1px solid white;
+        color: white;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #333;
+        font-size: 20px;
+        text-align: center;
+    }
+
+        #chart-container {
+        width: 80%;
+        margin: 20px auto;
+        background-color: #333;
+        border: 1px solid white;
+        padding: 20px;
+    }
+</style>
+{% include "_partials/_nav.admin.html.twig" %}
+<fieldset class="mb-3 ms-3 mt-3">
+    <h1>Tableau de bord</h1>
+    <legend style="margin-top: 30px; font-size: 35px">Statistiques :</legend>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+        <div style="background-color: rgba(255, 255, 255, 0.5); border: 2px solid white; border-radius: 10px; padding: 10px; margin-bottom: 10px; margin-left: 250px;">
+            <p><strong>Nombre total de fichiers téléchargés par les utilisateurs :</strong> {{ totalFiles }} Fichiers</p>
+        </div>
+        <div style="background-color: rgba(255, 255, 255, 0.5); border: 2px solid white; border-radius: 10px; padding: 10px; margin-bottom: 10px; margin-right: 250px">
+            <p><strong>Nombre de fichiers téléchargés aujourd'hui :</strong> {{ filesToday }} Fichiers</p>
+        </div>
+    </div>
+    <h2>Répartition des fichiers par client :</h2>
+    <table>
+        <tr>
+            <th>Utilisateurs</th>
+            <th>Nombre de fichiers</th>
+        </tr>
+        {% for userFile in userFiles %}
+        <tr>
+            <td>{{ userFile.firstname }} {{ userFile.lastName }}</td>
+            <td>{{ userFile.fileCount }} Fichiers</td>
+        </tr>
+        {% endfor %}
+    </table>
+</fieldset>
+<!-- Conteneur pour le graphique -->
+<h2 class="mb-3 ms-3 mt-3"> Queslques statistiques en diagramme :</h2>
+<div id="chart-container" style="width: 40%; margin-left: 270px;">
+    <h2>Nombre de fichiers téléchargés par jour</h2>
+    <canvas id="fileChart"></canvas>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<script>
+    // Données pour le graphique
+    var ctx = document.getElementById('fileChart').getContext('2d');
+    var fileChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [
+                {% for dayStat in lastMonthFiles %}
+                    "{{ dayStat.label }}",
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Nombre de fichiers téléchargés ce jour',
+                data: [
+                    {% for dayStat in lastMonthFiles %}
+                        {{ dayStat.count }},
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
+{% endblock %}
+{# {
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+  datasets: [{
+    label: "Dataset #1",
+    backgroundColor: "rgba(255,99,132,0.2)",
+    borderColor: "rgba(255,99,132,1)",
+    borderWidth: 2,
+    hoverBackgroundColor: "rgba(255,99,132,0.4)",
+    hoverBorderColor: "rgba(255,99,132,1)",
+    data: [65, 59, 20, 81, 56, 55, 140],
+  }]
+}, #}
