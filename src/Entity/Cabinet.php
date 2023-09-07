@@ -22,6 +22,7 @@ class Cabinet
     #[ORM\Column(length: 255)]
     private ?string $siret = null;
 
+    
     public function getId(): ?int
     {
         return $this->id;

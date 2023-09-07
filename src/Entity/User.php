@@ -65,9 +65,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Invoice::class, orphanRemoval: true)]
     private Collection $invoices;
 
-    #[ORM\OneToMany(mappedBy: 'invoiceAddress', targetEntity: Invoice::class, orphanRemoval: true)]
-    private Collection $invoicesAddress;
-
     #[ORM\Column(length: 150,  nullable:true)]
     private ?string $nomtitulaire = null;
 
@@ -93,6 +90,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
+    public function getInvoices(): Collection
+    {
+        return $this->invoices;
+    }
+    
     public function getEmail(): ?string
     {
         return $this->email;
@@ -295,66 +297,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($file->getUser() === $this) {
                 $file->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Invoice>
-     */
-    public function getInvoices(): Collection
-    {
-        return $this->invoices;
-    }
-
-    public function addInvoice(Invoice $invoice): static
-    {
-        if (!$this->invoices->contains($invoice)) {
-            $this->invoices->add($invoice);
-            $invoice->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInvoice(Invoice $invoice): static
-    {
-        if ($this->invoices->removeElement($invoice)) {
-            // set the owning side to null (unless already changed)
-            if ($invoice->getUser() === $this) {
-                $invoice->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Invoice>
-     */
-    public function getInvoicesAddress(): Collection
-    {
-        return $this->invoicesAddress;
-    }
-
-    public function addInvoicesAddress(Invoice $invoicesAddress): static
-    {
-        if (!$this->invoicesAddress->contains($invoicesAddress)) {
-            $this->invoicesAddress->add($invoicesAddress);
-            $invoicesAddress->setInvoiceAddress($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInvoicesAddress(Invoice $invoicesAddress): static
-    {
-        if ($this->invoicesAddress->removeElement($invoicesAddress)) {
-            // set the owning side to null (unless already changed)
-            if ($invoicesAddress->getInvoiceAddress() === $this) {
-                $invoicesAddress->setInvoiceAddress(null);
             }
         }
 

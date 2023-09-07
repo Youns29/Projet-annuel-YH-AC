@@ -14,46 +14,48 @@ class Invoice
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $invoiceNumber = null;
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    private ?string $invoiceNumber = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $invoiceDate = null;
+    #[ORM\Column(type: "datetime")]
+    private \DateTimeInterface $invoiceDate;
 
-    #[ORM\Column(length: 50)]
-    private ?string $totalAmount = null;
+    #[ORM\Column(type: "decimal", precision: 10, scale: 2, nullable: false)]
+    private string $totalAmount;
 
-    #[ORM\Column(length: 255)]
-    private ?string $totalWithoutTaxes = null;
+    #[ORM\Column(type: "decimal", precision: 10, scale: 2, nullable: false)]
+    private string $totalWithoutTaxes;
 
-    #[ORM\Column(length: 255)]
-    private ?string $taxeAmount = null;
+    #[ORM\Column(type: "decimal", precision: 10, scale: 2, nullable: false)]
+    private string $taxeAmount;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(inversedBy: 'invoicesAddress')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $invoiceAddress = null;
+    #[ORM\ManyToOne(inversedBy: 'invoices')]
+    #[ORM\JoinColumn(name: 'cabinet_id', referencedColumnName: 'id', nullable: false)]
+    private ?Cabinet $cabinet = null;
+
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $created_at = null;
 
+
+    
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getInvoiceNumber(): ?int
+    public function getInvoiceNumber(): ?string
     {
         return $this->invoiceNumber;
     }
-
-    public function setInvoiceNumber(int $invoiceNumber): static
+    
+    public function setInvoiceNumber(string $invoiceNumber): static
     {
         $this->invoiceNumber = $invoiceNumber;
-
         return $this;
     }
 
@@ -118,14 +120,14 @@ class Invoice
         return $this;
     }
 
-    public function getInvoiceAddress(): ?User
+    public function getCabinet(): ?Cabinet
     {
-        return $this->invoiceAddress;
+        return $this->cabinet;
     }
 
-    public function setInvoiceAddress(?User $invoiceAddress): static
+    public function setCabinet(?Cabinet $cabinet): self
     {
-        $this->invoiceAddress = $invoiceAddress;
+        $this->cabinet = $cabinet;
 
         return $this;
     }
