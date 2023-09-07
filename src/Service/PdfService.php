@@ -24,13 +24,13 @@ class PdfService
         $this->domPdf->loadHtml($html);
         $this->domPdf->render();
         $this->domPdf->stream("invoice.pdf", [
-            'Attachement' => false
+            'Attachment' => false
         ]);
     }
 
     public function generateBinaryPDF($html) {
         $this->domPdf->loadHtml($html);
         $this->domPdf->render();
-        $this->domPdf->output();
+        return $this->domPdf->output();
     }
 }
