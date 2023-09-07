@@ -36,42 +36,30 @@ class FileController extends AbstractController
                 $tempFilePath = $uploadDirectory . '/' . $newFilename;
                 $size = filesize($tempFilePath);
                 
-                // Récupérer les paramètres de tri et de filtre depuis la requête
-                $sortBy = $request->query->get('sort_by', 'date'); // Par défaut, trier par date
-                $searchTerm = $request->query->get('search_term', ''); // Terme de recherche
-                $fileFormat = $request->query->get('file_format', ''); // Format de fichier
+                // $sortBy = $request->query->get('sort_by', 'date'); // Par défaut, trier par date
+                // $fileFormat = $request->query->get('file_format', ''); // Format de fichier
 
                 // Récupérer l'utilisateur actuel
                 $user = $security->getUser();
 
-                // Créer une requête pour récupérer les fichiers
-                $fileRepo = $entityManager->getRepository(Files::class);
-                $queryBuilder = $fileRepo->createQueryBuilder('f')
-                                            ->where('f.user = :user')
-                                            ->setParameter('user', $user);
+                
+                // // Appliquer le tri
+                // if ($sortBy === 'date') {
+                //     $queryBuilder->orderBy('f.uploadDate', 'DESC'); // Trier par date de téléchargement
+                // } elseif ($sortBy === 'size') 
+                // dump($sortBy);
+                // {
+                //     $queryBuilder->orderBy('f.size', 'DESC');
+                // }
 
-                // Appliquer le tri
-                if ($sortBy === 'date') {
-                    $queryBuilder->orderBy('f.uploadDate', 'DESC'); // Trier par date de téléchargement
-                } elseif ($sortBy === 'size') 
-                dump($sortBy);
-                {
-                    $queryBuilder->orderBy('f.size', 'DESC');
-                }
 
-                // Appliquer la recherche par nom de fichier
-                if (!empty($searchTerm)) {
-                    $queryBuilder->andWhere('f.fileName LIKE :term')
-                                    ->setParameter('term', '%' . $searchTerm . '%');
-                }
+                // // Appliquer le filtre de format
+                // if (!empty($fileFormat)) {
+                //     $queryBuilder->andWhere('f.format = :format')
+                //                     ->setParameter('format', $fileFormat);
+                // }
 
-                // Appliquer le filtre de format
-                if (!empty($fileFormat)) {
-                    $queryBuilder->andWhere('f.format = :format')
-                                    ->setParameter('format', $fileFormat);
-                }
-
-                $uploadedFiles = $queryBuilder->getQuery()->getResult();
+                // $uploadedFiles = $queryBuilder->getQuery()->getResult();
 
                 // Récupérer l'utilisateur actuellement authentifié
                 $user = $security->getUser();
@@ -88,8 +76,8 @@ class FileController extends AbstractController
                 $useSpace = ($useSpace + $size) / (1024 * 1024 * 1024); // Convertir en gigaoctets
 
                 // Limite d'espace autorisée pour l'utilisateur
-                $stockageSpace = $user->getStockageSpace(); // Vous devez avoir cette valeur définie dans votre entité User
-                // dd($useSpace.">".$stockageSpace);
+                $stockageSpace = $user->getStockageSpace();
+                
 
                 
                 // Vérifiez si l'espace utilisé après l'ajout du nouveau fichier dépasse la limite
@@ -98,15 +86,14 @@ class FileController extends AbstractController
                     $this->addFlash('error', 'L\'espace de stockage est insuffisant. Veuillez acheter du stockage supplémentaire.');
                     return $this->redirectToRoute('app_stockage');
                 }
-                // dd($size);
 
                 // Créez une nouvelle instance de l'entité Files
                 $file = new Files();
                 $file->setFileName($newFilename);
-                $file->setSize($size);// Définissez la taille du fichier
+                $file->setSize($size);
                 $file->setUser($user);
-                $file->setFormat($format); // Définir le format du fichier
-                // Définissez d'autres attributs si nécessaire...
+                $file->setFormat($format);
+                
 
                 // Persistez l'entité dans la base de données
                 $entityManager->persist($file);
@@ -134,8 +121,8 @@ class FileController extends AbstractController
 
 
         $user = $security->getUser();
-        $user->setUseSpace($useSpace); // Mettez à jour la valeur useSpace pour l'utilisateur
-        $entityManager->persist($user); // Persistez les modifications de l'utilisateur
+        $user->setUseSpace($useSpace);
+        $entityManager->persist($user);
         $entityManager->flush();
 
 
@@ -143,7 +130,7 @@ class FileController extends AbstractController
         return $this->render('file/index.html.twig', [
             'uploadedFiles' => $uploadedFiles,
             'useSpace' => $useSpace,
-            'stockageSpace' => $user->getStockageSpace(), // Limite d'espace depuis l'entité User
+            'stockageSpace' => $user->getStockageSpace(),
         ]);
     }
 
