@@ -1,38 +1,55 @@
-{# templates/file/index.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Fichiers{% endblock %}
 
 {% block body %}
 	<style>
-		p, h1, h2, li, label, input, tr {
+
+        .choisirFichier {
+            color: white
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center; 
+            margin-bottom: 20px;
+            margin-left: 63%;
+        }
+
+        .search-container p {
+            margin-top: 15px;
+        }
+
+        .searchInput {
+            color: black;
+            margin-left: 10px;      
+        }
+
+		p, h1, h2, li, label, tr {
 			color: white
 		}
+
          table {
             border-collapse: collapse;
-            width: 100%;
+            width: 90%;
+            margin-left: 10px;
         }
+
         th, td {
             border: 1px solid white;
             padding: 8px;
-            text-align: left;
         }
+
         th {
             background-color: #333;
             color: white;
+            text-align: center;
         }
-        #progress-bar {
-            margin-top: 10px;
-            height: 20px;
-            border-radius: 5px;
-            overflow: hidden;
+
+        .sortable {
+            cursor: pointer;
         }
-        #progress {
-            height: 100%;
-            width: 50%;
-            transition: width 0.3s ease-in-out;
-            background-color: #4caf50;
-        }
+
 	</style>
     
 	{% for message in app.flashes('success') %}
@@ -45,36 +62,38 @@
         </div>
     {% endfor %}
     {% include "_partials/_nav.html.twig" %}
-    {# Formulaire de recherche de fichier par nom #}
-    <form method="get" action="{{ path('app_file') }}">
-        <label for="search_term">Rechercher un fichier :</label>
-        <input type="text" name="search_term" id="search_term" style="color: black;">
-        <button type="submit">Rechercher</button>
-    </form>
+        <h1 class="ms-3">Télécharger un Fichier</h1>
+        <div class="search-container">
+            <p>Rechercher un Fichier :</p>
+            <input class="searchInput" type="text" id="searchInput" placeholder="Rechercher un fichier...">
+        </div>
+        <form method="post" class="ms-3" action="{{ path('app_file') }}" enctype="multipart/form-data">
+            <label for="file">Choisir un fichier :</label>
+            <input type="file" name="file" id="file" class="choisirFichier">
+            <button class="ms-2" type="submit">Télécharger</button>
+        </form>
 
-        <h1>Télécharger un Fichier</h1>
-        <form method="post" action="{{ path('app_file') }}" enctype="multipart/form-data">
-        <label for="file">Choisir un fichier :</label>
-        <input type="file" name="file" id="file">
-        <br>
-        <button type="submit">Télécharger</button>
-    </form>
-
-    <h2 class="mt-4">Fichiers téléchargés</h2>
-    {# <div id="progress-bar">
-        <div id="progress"></div>
-    </div> #}
-    {# <p id="progress-text" style="color: white" data-total-gigabytes="{{ totalSizeGigabytes }}">{{ totalSizeGigabytes }} Go</p> #}
-    <p>Espace de stockage utilisé : {{ useSpace|number_format(7, '.', '') }} Go</p>
-    <p>Limite d'espace de stockage : {{ stockageSpace }} Go</p>
-    <table>
+    <h2 class="mt-4 ms-3">Fichiers téléchargés</h2>
+    <p class="ms-3">Espace de stockage utilisé : {{ useSpace|number_format(7, '.', '') }} Go</p>
+    <p class="ms-3">Limite d'espace de stockage : {{ stockageSpace }} Go</p>
+    <table id="fileTable">
         <tr>
             <th>File Name</th>
             <th>Action</th>
-            <th><a href="{{ path('app_file', {'sort_by': 'size'}) }}">Size</a></th>
-            <th>Format</th>
+            <th class="sortable" data-sort="size">Size</th>
+            <th>
+            <label for="formatFilter" style="font-size: 15px">Format :</label>
+            <select id="formatFilter">
+                <option value="">All Formats</option>
+                <option value="pdf">pdf</option>
+                <option value="jpg">jpg</option>
+                <option value="png">png</option>
+                <option value="jpeg">jpeg</option>
+                <option value="docx">docx</option>
+            </select>
+            </th>
             <th>Description</th>
-            <th><a href="{{ path('app_file', {'sort_by': 'date'}) }}">Upload Date</a></th>    
+            <th class="sortable" data-sort="uploadDate">Upload Date</th>    
 
         </tr>
         {% for file in uploadedFiles %}
@@ -92,30 +111,123 @@
                 </a>
                 </td>
                 
-                <td>{{ file.size }} octets</td>
-                <td>{{ file.format }}</td>
-                <td>{{ file.description ?: 'N/A' }}</td>
-                <td>{{ file.uploadDate|date('Y-m-d') }}</td>
+                <td style="text-align: center" data-column="size">{{ file.size }} octets</td>
+                <td style="text-align: center">{{ file.format }}</td>
+                <td style="text-align: center">{{ file.description ?: 'N/A' }}</td>
+                <td style="text-align: center" data-column="uploadDate">{{ file.uploadDate|date('Y-m-d') }}</td>
             </tr>
         {% endfor %}
     </table>
+
     <script>
-    function updateProgressBar() {
-        const progressBar = document.getElementById('progress');
-        const progressText = document.getElementById('progress-text');
-        const totalSizeGigabytes = parseFloat(progressText.getAttribute('data-total-gigabytes'));
+        // Récupérez le champ de saisie de recherche et la table
+        const searchInput = document.getElementById('searchInput');
+        const fileTable = document.getElementById('fileTable');
+        
+        // Écoutez les événements de saisie dans le champ de recherche
+        searchInput.addEventListener('input', function() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const rows = fileTable.getElementsByTagName('tr');
+            
+            // Parcourez toutes les lignes du tableau sauf la première (en-tête)
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const fileNameCell = row.getElementsByTagName('td')[0];
+                
+                // Vérifiez si le nom du fichier contient le terme de recherche
+                if (fileNameCell) {
+                    const fileName = fileNameCell.textContent.toLowerCase();
+                    if (fileName.includes(searchTerm)) {
+                        row.style.display = ''; // Affichez la ligne si le terme est trouvé
+                    } else {
+                        row.style.display = 'none'; // Masquez la ligne sinon
+                    }
+                }
+            }
+        });
 
+        // Récupérez toutes les colonnes triables
+        const headers = fileTable.querySelectorAll('.sortable');
 
-        progressBar.style.width = `${totalSizeGigabytes * 5}%`; // Adjust the multiplier as needed
-        progressText.innerText = `${totalSizeGigabytes.toFixed(5)} Go`; // Display two decimal places
-    }
+        // Tri des colonnes
+        headers.forEach(header => {
+            header.addEventListener('click', () => {
+                const column = header.dataset.sort;
+                const order = header.dataset.order === 'asc' ? 'desc' : 'asc';
 
-    // Update progress bar when the page loads
-    updateProgressBar();
-</script>
+                // Mettez à jour l'attribut data-order pour le suivi de la direction de tri
+                headers.forEach(h => h.dataset.order = '');
+                header.dataset.order = order;
 
+                // Convertissez les lignes du tableau en tableau pour trier
+                const rowsArray = Array.from(fileTable.rows);
+
+                // Triez les lignes en fonction de la colonne et de l'ordre
+                rowsArray.sort((rowA, rowB) => {
+                    const cellA = rowA.querySelector(`td[data-column="${column}"]`);
+                    const cellB = rowB.querySelector(`td[data-column="${column}"]`);
+
+                    if (cellA && cellB) {
+                        const valueA = cellA.textContent.trim();
+                        const valueB = cellB.textContent.trim();
+
+                        if (column === 'uploadDate') {
+                            const dateA = new Date(valueA);
+                            const dateB = new Date(valueB);
+
+                            if (order === 'asc') {
+                                return dateA - dateB;
+                            } else {
+                                return dateB - dateA;
+                            }
+                        } else {
+                            if (order === 'asc') {
+                                return valueA.localeCompare(valueB);
+                            } else {
+                                return valueB.localeCompare(valueA);
+                            }
+                        }
+                    }
+
+                    return 0;
+                });
+
+                // Supprimez les anciennes lignes
+                while (fileTable.firstChild) {
+                    fileTable.removeChild(fileTable.firstChild);
+                }
+
+                // Ajoutez les lignes triées à nouveau
+                rowsArray.forEach(row => {
+                    fileTable.appendChild(row);
+                });
+            });
+        });
+
+        // Récupérez la liste déroulante (sélecteur) pour les formats
+        const formatFilter = document.getElementById('formatFilter');
+
+        // Écoutez les événements de changement dans la liste déroulante
+        formatFilter.addEventListener('change', function() {
+            const selectedFormat = formatFilter.value.toLowerCase();
+            const rows = fileTable.getElementsByTagName('tr');
+
+            // Parcourez toutes les lignes du tableau sauf la première (en-tête)
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const formatCell = row.getElementsByTagName('td')[3]; // 3 est l'indice de la colonne du format
+
+                // Vérifiez si le format correspond à la sélection ou si la sélection est vide ("Tous les Formats")
+                if (selectedFormat === '' || (formatCell && formatCell.textContent.trim().toLowerCase() === selectedFormat)) {
+                    row.style.display = ''; // Affichez la ligne si le format correspond
+                } else {
+                    row.style.display = 'none'; // Masquez la ligne sinon
+                }
+            }
+        });
 
     </script>
+
 
 
 
