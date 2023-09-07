@@ -8,6 +8,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Invoice;
+use Symfony\Component\Security\Core\Security;
+use App\Entity\Cabinet;
+use App\Service\PdfService;
+
 
 class StockageController extends AbstractController
 {
@@ -42,7 +47,7 @@ class StockageController extends AbstractController
  
  
     #[Route('/stripeConnected/addStockageConnected', name: 'app_add_stockage', methods: ['POST'])]
-    public function addStockageConnected(Request $request, EntityManagerInterface $entityManager)
+    public function addStockageConnected(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
         Stripe\Stripe::setApiKey($_ENV["STRIPE_SECRET"]);
         Stripe\Charge::create ([
@@ -56,8 +61,26 @@ class StockageController extends AbstractController
         $currentStockageSpace = $user->getstockageSpace();
         $user->setstockageSpace($currentStockageSpace + 20);
 
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $cabinet = $entityManager->getRepository(Cabinet::class)->findOneBy([]);
+
+        if (!$cabinet) {
+            throw $this->createNotFoundException('Aucune entreprise trouvée');
+        }
+
+            // Créez la facture
+            $invoice = new Invoice();
+            $invoiceNumber = date('YmdHis') . '_' . uniqid();
+            $invoice->setInvoiceNumber($invoiceNumber);
+            $invoice->setInvoiceDate(new \DateTime());
+            $invoice->setTotalAmount("20.00");
+            $invoice->setTotalWithoutTaxes("16.00");
+            $invoice->setTaxeAmount("4.00");
+            $invoice->setCreatedAt(new \DateTimeImmutable());
+            $invoice->setUser($user);
+        
+            $entityManager->persist($user);
+            $entityManager->persist($invoice);
+            $entityManager->flush();
 
         $this->addFlash(
             'success',

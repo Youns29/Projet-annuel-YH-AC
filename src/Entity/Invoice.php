@@ -37,7 +37,7 @@ class Invoice
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
-    #[ORM\JoinColumn(name: 'cabinet_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'cabinet_id', referencedColumnName: 'id', nullable: true)]
     private ?Cabinet $cabinet = null;
 
 
