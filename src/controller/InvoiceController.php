@@ -42,42 +42,44 @@ class InvoiceController extends AbstractController
         ]);
     }
 
-    #[Route('/invoice/{id}', name: 'invoice_pdf')]
-    public function generatePdfPersonne(Invoice $invoice = null, PdfService $domPdf, EntityManagerInterface $entityManager): Response // Injection de EntityManagerInterface
-    {
-        if (!$invoice) {
-            throw $this->createNotFoundException('Facture non trouvée');
-        }
-    
-        // Fetch the cabinet data from your database or wherever it's stored
-        $cabinet = $entityManager->getRepository(Cabinet::class)->findOneBy([]); // Remplacez par votre logique
-    
-        if (!$cabinet) {
-            throw $this->createNotFoundException('Aucune entreprise trouvée');
-        }
-    
-        // Get the current user
-        $user = $this->getUser();
-    
-        if (!$user) {
-            throw $this->createNotFoundException('Utilisateur non trouvé');
-        }
-    
-        $html = $this->renderView('invoice/show.html.twig', [
-            'invoice' => $invoice,
-            'cabinet' => $cabinet,
-            'user' => $user,
-        ]);
-    
-        // Generate and show the PDF file
-        $domPdf->showPdfFile($html);
-    
-        // You can also return a Response object with the PDF content if needed
-        // Example: return new Response($html);
-    
-        // Make sure to handle the PDF generation and response accordingly in your PdfService
+#[Route('/invoice/{id}', name: 'invoice_pdf')]
+public function generatePdfPersonne(Invoice $invoice = null, PdfService $domPdf, EntityManagerInterface $entityManager): Response
+{
+    if (!$invoice) {
+        throw $this->createNotFoundException('Facture non trouvée');
     }
-    
+
+    $cabinet = $entityManager->getRepository(Cabinet::class)->findOneBy([]);
+
+    if (!$cabinet) {
+        throw $this->createNotFoundException('Aucune entreprise trouvée');
+    }
+
+    // Get the current user
+    $user = $this->getUser();
+
+    if (!$user) {
+        throw $this->createNotFoundException('Utilisateur non trouvé');
+    }
+
+    $html = $this->renderView('invoice/show.html.twig', [
+        'invoice' => $invoice,
+        'cabinet' => $cabinet,
+        'user' => $user,
+    ]);
+
+    // Generate the PDF content using your PdfService
+    $domPdf->showPdfFile($html);
+
+    // Create a response with the PDF content
+    $response = new Response();
+    $response->headers->set('Content-Type', 'application/pdf');
+
+    // Optional: Set the filename for the downloaded PDF
+    $response->headers->set('Content-Disposition', 'inline; filename="invoice.pdf"');
+
+    return $response;
+}
 
     // Action pour afficher le formulaire de création de facture
     #[Route('/invoice/create', name: 'invoice_create')]

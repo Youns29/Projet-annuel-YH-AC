@@ -17,6 +17,9 @@ class Invoice
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $invoiceNumber = null;
 
+    #[ORM\Column(type: "string", length: 255, nullable: "designation")]
+    private ?string $designation = "Abonnement";
+
     #[ORM\Column(type: "datetime")]
     private \DateTimeInterface $invoiceDate;
 
@@ -71,6 +74,18 @@ class Invoice
         return $this;
     }
     
+    public function getDesignation(): ?string
+    {
+        return $this->designation;
+    }
+
+    public function setDesignation(string $designation): static
+    {
+        $this->designation = $designation;
+
+        return $this;
+    }
+
     public function getTotalAmount(): ?string
     {
         return $this->totalAmount;

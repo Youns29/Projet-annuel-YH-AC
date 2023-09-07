@@ -1,61 +1,124 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Facture{% endblock %}
+{# {% extends 'base.html.twig' %} #}
 
 {% block body %}
-    {% include "_partials/_nav.html.twig" %}
-    
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-6">
-                <h1>Logo</h1>
-            </div>
-            <div class="col-md-6 text-right">
-                <p>Date: {{ "now"|date("d/m/Y") }}</p>
-                {% if invoice is not null %}
-                    <p>Numéro de facture: {{ invoice.invoiceNumber }}</p>
-                {% endif %}
-            </div>
+    {% include "_partials/__nav.html.twig" %}
+        <style>
+        /* Ajoutez ici vos styles CSS personnalisés pour la facture */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .row {
+            margin-bottom: 20px;
+        }
+
+        hr {
+            border-top: 1px solid #ddd;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        h4 {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        address {
+            font-style: normal;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 text-right">
+            <p>Date: {{ "now"|date("d/m/Y") }}</p>
+            {% if invoice is not null %}
+                <p>Numéro de facture: {{ invoice.invoiceNumber }}</p>
+            {% endif %}
         </div>
+    </div>
 
-        <hr>
+    <hr>
 
-        <div class="row">
-            <div class="col-md-6">
-                <h4>{{ cabinet.name }}</h4>
-                <address>
-                    {{ cabinet.address }}<br>
-                </address>
-            </div>
+    <div class="row">
+        <div class="col-md-6">
+            <h4>{{ cabinet.name }}</h4>
+            <p>{{ cabinet.siret }}</p>
+            <address>
+                {{ cabinet.address }}<br>
+            </address>
+        </div>
+        {% if app.user is not null %}
             <div class="col-md-6 text-right">
                 <h4>{{ app.user.firstname }} {{ app.user.lastname }}</h4>
                 <address>
                     {{ app.user.address }}<br>
-                    {# {{ app.user.phoneNumber }}<br> #}
                     {{ app.user.email }}
                 </address>
             </div>
-        </div>
-
-        <hr>
-
-
-        <!-- Vous pouvez ajouter ici les détails de la facture -->
-
-        <hr>
-
-        <p>Conformément à la loi n°92/1442 du 31 décembre 1992, nous vous informons que le non-respect des conditions de paiement entraîne des intérêts de retard conformément aux modalités et taux définis par la loi. En cas de retard de paiement, une indemnité forfaitaire de 40€ sera due pour frais de recouvrement.</p>
-
-        <hr>
-{# 
-        <p>Mode de règlement : {{ invoice.totalAmount }}</p>
-        <p>Conditions de règlement : {{ invoice.totalWithOutTaxes }}</p>
-        <p>Date limite de règlement : {{ invoice.paymentDueDate|date("d/m/Y") }}</p> #}
-
-        <hr>
-
-        <div class="text-center">
-            <p>{{ cabinet.name }} - {{ cabinet.address }}, {{ cabinet.siret }} </p>
-        </div>
+        {% endif %}
     </div>
+
+    <hr>
+
+    <!-- Détails de la facture -->
+    <table>
+        <thead>
+        <tr>
+            <th>Description</th>
+            <th>Prix Unitaire (€)</th>
+            <th>Quantité</th>
+            <th>Total (€)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ invoice.designation }}</td>
+            <td>{{ invoice.TotalWithoutTaxes }}</td>
+            <td>Abonnement unique</td>
+            <td>{{ invoice.TotalWithoutTaxes }}</td>
+        </tr>
+
+        </tbody>
+    </table>
+
+    <hr>
+
+    <!-- Total de la facture -->
+
+                
+        <div class="text-right">
+            <p>Total Hors Taxes: {{ invoice.TotalWithoutTaxes }} €</p>
+            <p>Montant de la TVA : {{ invoice.TaxeAmount }} €</p>
+            <h4>Montant toute taxes comprises : {{ invoice.TotalAmount }} €</h4>
+        </div>
+    <hr>
+
+    <p>Conformément à la loi n°92/1442 du 31 décembre 1992, nous vous informons que le non-respect des conditions de paiement entraîne des intérêts de retard conformément aux modalités et taux définis par la loi. En cas de retard de paiement, une indemnité forfaitaire de 40€ sera due pour frais de recouvrement.</p>
+
+    <hr>
+
+    <div class="text-center">
+        <p>{{ cabinet.name }} - {{ cabinet.address }}, {{ cabinet.siret }}</p>
+    </div>
+</div>
+
+</body>
 {% endblock %}
