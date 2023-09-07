@@ -42,7 +42,7 @@ h1, h4, p, li {
                             Date de Facture : {{ invoice.invoiceDate|date('d/m/Y') }}
                             Montant Total : {{ invoice.totalAmount }} €
                             <!-- Ajoutez d'autres informations de facture selon votre modèle de données -->
-                            {# <a href="{{ path('your_download_route', {'id': invoice.id}) }}" target="_blank">Télécharger</a> #}
+                <a href="{{ path('invoice_pdf', {'id': invoice.id}) }}" target="_blank">Visualiser le PDF</a>
                         </li>
                     {% endfor %}
                 </ul>
